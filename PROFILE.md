@@ -17,9 +17,9 @@ Vibe code chuẩn dev: biết sản phẩm thật gồm những gì, phân tích
 **Điểm hổng (cần luyện)**
 1. Lệch biên: `range(1, 4)` dừng trước 4, chỉ số mảng bắt đầu từ 0.
 2. Theo dõi trạng thái qua nhiều vòng lặp: chưa quen vẽ bảng theo dõi.
-3. Debug theo bằng chỻng: có xu hướng đoán trước khi đọc thông báo lỗi.
-4. Lỗi chồng lỗi: có xu hướng chuyển sang AI khác thay vẴ process commit tout control.
-5. Database vs Excel; luồng đăng nhập còn sơ sái (băm mật khẩu, session/token).
+3. Debug theo bằng chứng: có xu hướng đoán trước khi đọc thông báo lỗi.
+4. Lỗi chồng lỗi: có xu hướng chuyển sang AI khác thay vì quay về commit tốt và thu hẹp phạm vi.
+5. Database vs Excel; luồng đăng nhập còn sơ sài (băm mật khẩu, session/token).
 
 ## Cách học đã thống nhất
 Dự đoán trước, chạy sau. Phá có chủ đích. Viết lại không nhìn. Dùng AI làm gia sư.
