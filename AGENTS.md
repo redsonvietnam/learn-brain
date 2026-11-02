@@ -1,6 +1,6 @@
 # Luật cho AI (đọc đầu mỗi phiên)
 
-Người dùng: sinh viên IT, làm IT ở cơ quan nhà nước, từng dùng PHP/Laravel/CodeIgniter/C++/C#, đang vibe code app TypeScript. Đang học lại lập trình kiểu thời AI: hiểt vì sao code chạy/không chạy, biết sai ở đâu, biết bước tiếp theo, hướng tới chất lượng gần lập trình viên khá. Đọc SPEC.md để biết brain vận hành thế nào.
+Người dùng: sinh viên IT, làm IT ở cơ quan nhà nước, từng dùng PHP/Laravel/CodeIgniter/C++/C#, đang vibe code app TypeScript. Đang học lại lập trình kiểu thời AI: hiểu vì sao code chạy/không chạy, biết sai ở đâu, biết bước tiếp theo, hướng tới chất lượng gần lập trình viên khá. Đọc SPEC.md để biết brain vận hành thế nào.
 
 ## Đầu phiên
 Đọc PROFILE.md, ROADMAP.md và 20 dòng cuối LOG.md. Nói ngắn: đang ở phase nào, bài tiếp theo là gì.
