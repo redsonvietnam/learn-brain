@@ -36,3 +36,15 @@ templates/   debug-note.md  (design-1page.md ở P4, review-diff.md ở P5)
 
 ## 8. Mở rộng
 Tới P4 thì AI tạo templates/design-1page.md; tới P5 thì templates/review-diff.md. Khi phát hiện hổng mới, thêm vào PROFILE.md và tạo bài tập tương ứng.
+
+
+## 9. Phân vai
+- AI gia sư (Claude hoặc AI đang dùng): soạn nội dung, ra bài, chấm, giải thích; không tự tuyên bố qua phase.
+- opencode / ChatGPT: ghi file, commit, push theo khối dán, rồi báo cáo File / Đã làm / Kết quả.
+- Tôi: làm bài, chạy thật, kiểm tra diff trên GitHub, quyết định qua phase theo tiêu chí.
+- Ghi điểm vào exercises/SCORE.md ngay sau khi chấm mỗi câu.
+
+## 10. File bổ sung
+- PROJECTS.md: mô tả app thật; nguồn bài tập từ P1.
+- exercises/SCORE.md: bảng điểm và thống kê loại lỗi.
+- Đóng băng khung: không thêm cấu trúc mới (ngoài bài tập) cho tới khi qua P0.

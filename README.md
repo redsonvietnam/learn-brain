@@ -14,5 +14,6 @@ Bộ não học lập trình thời AI của riêng tôi (repo private).
 | ROADMAP.md | Lộ trình, tiêu chí qua từng phase |
 | MAP.md | Sơ đồ tiến độ |
 | LOG.md | Nhật ký phiên và sổ lỗi |
-| exercises/ | Bài tập theo phase |
+| PROJECTS.md | Mô tả app thật của tôi |
+| exercises/ | Bài tập theo phase và bảng điểm (SCORE.md) |
 | templates/ | Mẫu ghi chú |

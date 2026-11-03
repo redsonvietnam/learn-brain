@@ -3,7 +3,7 @@
 Trạng thái: [ ] chưa, [~] đang làm, [x] xong. Chỉ đánh [x] khi đạt tiêu chí.
 
 ## P0. Đọc và theo dõi code  [~]
-Bài tập: exercises/P0-01-range-va-chi-so.md
+Bài tập: exercises/P0-01-range-va-chi-so.md. Điểm: exercises/SCORE.md
 - [ ] Vẽ bảng theo dõi cho mọi vòng lặp
 - [ ] Hết lỗi lệch biên (range, chỉ số từ 0)
 - [ ] Phân biệt `%` (chia dư) và `//` (chia nguyên)
