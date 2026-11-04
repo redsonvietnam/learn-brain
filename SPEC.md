@@ -4,7 +4,8 @@
 Một nơi duy nhất ghi mục tiêu, trình độ, lộ trình, tiến độ và lỗi đã mắc, để mọi AI người dùng dùng đều biết người học đang ở đâu mà không cần giải thích lại.
 
 ## 2. Nguyên tắc
-- Chỉ dùng file Markdown và git. Không làm app, không thêm công cụ.
+- Nguồn dữ liệu và bằng chứng chuẩn là Markdown và git. `dashboard.html` là giao diện tĩnh phụ trợ để luyện tập và nhập/xuất `exercises/SCORE.md`; không thay thế file Markdown, nhật ký hay bằng chứng trong repo.
+- Không tạo web app/backend hoặc thêm framework, thư viện hay dịch vụ bên ngoài.
 - AI là gia sư; tiến bộ phải do người học chứng minh được.
 - Ít mà dùng thật: chưa tới phase nào thì chưa tạo tài liệu cho phase đó.
 
@@ -47,6 +48,7 @@ Tới P4 thì AI tạo templates/design-1page.md; tới P5 thì templates/review
 ## 10. File bổ sung
 - PROJECTS.md: mô tả app thật; nguồn bài tập từ P1.
 - exercises/SCORE.md: bảng điểm và thống kê loại lỗi.
+- dashboard.html: giao diện tĩnh chạy cục bộ, không backend và không phụ thuộc bên ngoài; SCORE.md vẫn là nguồn chuẩn.
 - Đóng băng khung: không thêm cấu trúc mới (ngoài bài tập) cho tới khi qua P0.
 
 ## 11. Bốn vòng lặp

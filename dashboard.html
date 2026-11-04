@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>learn-brain: Bảng điều khiển</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ccircle cx=%2732%27 cy=%2732%27 r=%2729%27 fill=%27%233b6ef5%27/%3E%3Cpath d=%27M18 21h10v22H18zM36 21h10v22H36z%27 fill=%27white%27/%3E%3C/svg%3E">
+<style>
+:root{--bg:#f6f5f1;--surface:#fff;--text:#1f2328;--muted:#667085;--border:#e2e0d6;--accent:#3b6ef5;--ok:#2e7d32;--okbg:#e3f3e4;--mid:#a16207;--midbg:#fff3c4;--bad:#b42318;--badbg:#fde4e4;--none:#737984;--nonebg:#eeede8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#14161a;--surface:#1d2025;--text:#e8eaed;--muted:#9aa1ad;--border:#2f343c;--accent:#7aa2ff;--ok:#7bd88f;--okbg:#173223;--mid:#f2c14e;--midbg:#3a2f12;--bad:#ff9a8f;--badbg:#4a1d1d;--none:#9aa1ad;--nonebg:#262a30}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#14161a;--surface:#1d2025;--text:#e8eaed;--muted:#9aa1ad;--border:#2f343c;--accent:#7aa2ff;--ok:#7bd88f;--okbg:#173223;--mid:#f2c14e;--midbg:#3a2f12;--bad:#ff9a8f;--badbg:#4a1d1d;--none:#9aa1ad;--nonebg:#262a30}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+h1{margin:0 0 14px;font-size:24px;line-height:1.2}
+h2{margin:26px 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.muted{color:var(--muted);font-size:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px}
+.next{border:2px solid var(--accent)}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--accent)}
+.next p{margin:6px 0 0}
+.big{font-size:20px;font-weight:700;line-height:1.3}
+.say{padding:8px 12px;border-radius:10px;background:var(--nonebg);font-size:14px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px}
+.arrow{text-align:center;color:var(--muted);line-height:1.5}
+.node{font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:12px;display:block;width:100%}
+.node.on{border-color:var(--accent)}
+.node.goal{border-style:dashed}
+.node b{display:block;font-size:14px}
+.node .nm{display:block;margin:2px 0 8px;font-size:14px}
+.badge{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px}
+.b-doing{background:var(--midbg);color:var(--mid)}
+.b-todo{background:var(--nonebg);color:var(--none)}
+.bar{height:6px;border-radius:3px;background:var(--border);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+#detail{margin-top:12px}
+#detail h3{margin:0 0 6px;font-size:17px}
+#detail p{margin:6px 0 0;font-size:15px}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.sk{padding:10px 12px;border-radius:12px;border:1px solid var(--border);display:grid;gap:4px;align-content:start}
+.sk b{font-size:14px}
+.sk .lab{font-size:12px;font-weight:700}
+.sk.ok{background:var(--okbg)}.sk.ok .lab{color:var(--ok)}
+.sk.mid{background:var(--midbg)}.sk.mid .lab{color:var(--mid)}
+.sk.bad{background:var(--badbg)}.sk.bad .lab{color:var(--bad)}
+.sk.none{background:var(--nonebg)}.sk.none .lab{color:var(--none)}
+.dots{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.dot{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:700}
+.dot.D{background:var(--okbg);color:var(--ok)}
+.dot.M{background:var(--midbg);color:var(--mid)}
+.dot.S{background:var(--badbg);color:var(--bad)}
+svg{width:100%;height:auto;display:block;margin-top:8px}
+.ln{fill:none;stroke:var(--accent);stroke-width:2.5}
+.pt{fill:var(--accent)}
+.tgt{stroke:var(--muted);stroke-dasharray:4 4;stroke-width:1}
+.tx{fill:var(--muted);font-size:10px}
+details{margin-top:26px}
+summary{cursor:pointer;font-weight:600;padding:8px 0}
+textarea{width:100%;min-height:140px;font:13px/1.4 ui-monospace,Consolas,monospace;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+button.act{font:inherit;font-weight:600;padding:8px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;margin:8px 8px 0 0}
+button.act.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.code{background:var(--nonebg);border-radius:10px;padding:10px 12px;font:14px/1.45 ui-monospace,Consolas,monospace;overflow-x:auto;margin:8px 0}
+.prac table{border-collapse:collapse;font-size:13px;margin-top:8px}
+.prac th,.prac td{border:1px solid var(--border);padding:4px 8px;text-align:left}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{font:inherit;font-size:13px;padding:6px 10px;border-radius:99px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+input,select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;margin-top:6px}
+.cal{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.cd{width:30px;height:30px;border-radius:6px;display:grid;place-items:center;font-size:12px;background:var(--nonebg);color:var(--muted)}
+.cd.h1{background:var(--midbg);color:var(--mid)}
+.cd.h2{background:var(--okbg);color:var(--ok)}
+.rg{fill:none;stroke:var(--border)}
+.rp{fill:rgba(59,110,245,.25);stroke:var(--accent);stroke-width:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>learn-brain</h1>
+  <section class="card next" id="next"></section>
+  <h2>Làm bài</h2>
+  <section class="card prac" id="prac"></section>
+  <h2>Đường đi</h2>
+  <div id="road"></div>
+  <section class="card" id="detail"></section>
+  <section class="card" id="boss" style="margin-top:10px"></section>
+  <h2>Bản đồ kỹ năng</h2>
+  <div class="skills" id="skills"></div>
+  <p class="muted" id="skillnote"></p>
+  <section class="card" id="radar"></section>
+  <h2>Nhịp luyện</h2>
+  <section class="card" id="rhythm"></section>
+  <h2>Xu hướng</h2>
+  <section class="card">
+    <div class="muted">Tỉ lệ đúng trượt trên 5 câu gần nhất. Đúng = 1, một phần = 0,5, sai = 0.</div>
+    <div id="chart"></div>
+    <div class="dots" id="dots"></div>
+  </section>
+  <details>
+    <summary>Ghi tay một câu, xóa, xuất SCORE.md</summary>
+    <div id="manual"></div>
+  </details>
+  <details>
+    <summary>Cập nhật dữ liệu</summary>
+    <p class="muted">Copy nội dung file exercises/SCORE.md trên GitHub, dán vào đây. Trang tự tính lại và nhớ trên thiết bị này. Chấp nhận SCORE.md hiện tại với 5 cột (#, Ngày, Bài, KQ, Lỗi); cột Kỹ năng là tùy chọn. Nếu thiếu, dashboard suy ra kỹ năng yếu từ mã lỗi L1–L8.</p>
+    <textarea id="paste" aria-label="Nội dung SCORE.md"></textarea>
+    <div><button class="act pri" id="apply">Cập nhật</button><button class="act" id="reset">Dùng dữ liệu mẫu</button></div>
+    <p class="muted" id="msg"></p>
+    <p class="muted" id="src"></p>
+  </details>
+</div>
+<script>
+const KEY = "lb:score";
+const DEF = `| # | Ngày | Bài | KQ | Lỗi | Kỹ năng |
+|---|---|---|---|---|---|
+| 1 | 2026-11-03 | for range(5) print i | S | L4 | range,inra |
+| 2 | 2026-11-03 | range(2, 6) tổng | S | L1 | range,bang |
+| 3 | 2026-11-03 | ds[0], ds[2], len | Đ | | chiso |
+| 4 | 2026-11-03 | 17 % 5, 10 % 2, 7 // 2 | M | L3 | phep |
+| 5 | 2026-11-03 | range(3, 7) | Đ | | range |
+| 6 | 2026-11-03 | range(1, 1) | S | L1 | range |
+| 7 | 2026-11-03 | viết range in 1 đến 5 | Đ | | range |
+| 8 | 2026-11-03 | 9 // 2, 9 / 2, 9 % 2 | Đ | | phep |
+| 9 | 2026-11-03 | tổng số lẻ range(1, 5) | Đ | | range,bang,phep |
+| 10 | 2026-11-03 | range(2, 9) số vòng | Đ | | range |
+| 11 | 2026-11-03 | traceback ds[len(ds)] | Đ | | trace,chiso |
+| 12 | 2026-11-03 | while đếm ngược 3, 2, 1 | S | L4 | while,inra,bang |
+| 13 | 2026-11-03 | print(i * 2) range(3) | S | L4, L6 | range,inra,bang |
+| 14 | 2026-11-03 | while x * 3 < 20 | S | L6 | while,bang |
+| 15 | 2026-11-03 | ds range(1, len) | M | L1, L4 | range,chiso,inra |
+| 16 | 2026-11-03 | traceback phan_tu_cuoi([]) | M | L8 | trace |
+| 17 | 2026-11-03 | range(4) print i + 10 | Đ | | range,inra |
+| 18 | 2026-11-03 | while n * 2 < 30 | S | L5 | while,bang |
+| 19 | 2026-11-03 | ds range(2, len) | Đ | | range,chiso |
+| 20 | 2026-11-03 | while n + 4 < 10 | S | L7 | while,bang |
+| 21 | 2026-11-03 | ds range(1, len + 1) có lỗi | S | L2, L7 | range,chiso,trace |`;
+const SK = [
+ {id:"range", name:"range và số vòng", tip:"Đoán số vòng = b − a trước, rồi mới liệt kê giá trị."},
+ {id:"chiso", name:"Chỉ số từ 0", tip:"Viết ra mọi chỉ số hợp lệ (0 đến n−1) trước khi đọc code."},
+ {id:"phep", name:"Phép %, //, /", tip:"Tự tính 7 / 2, 7 // 2, 7 % 2 rồi kiểm tra: 7 = 2 × thương + dư."},
+ {id:"inra", name:"Đọc đúng cái được in", tip:"Bảng có cột “In ra” riêng, đề hỏi gì thì đọc đúng cột đó."},
+ {id:"while", name:"Vòng while", tip:"Ghi điều kiện kiểm tra ở đầu mỗi vòng; biến chỉ đổi khi có dòng đổi nó."},
+ {id:"bang", name:"Bảng theo từng dòng", tip:"Mỗi dòng code một hàng trong bảng, không nhảy cóc."},
+ {id:"trace", name:"Đọc traceback", tip:"Đọc từ dưới lên: loại lỗi, dòng nổ, ai gọi; rồi hỏi dữ liệu vào từ đâu."}
+];
+const P = [
+ {id:"P0", name:"Đọc và theo dõi code", exit:"10 bài đoán đúng liên tiếp và đọc đúng 3 traceback mới.", real:"Đọc một hàm nhỏ trong bamso và vẽ bảng theo dõi."},
+ {id:"P1", name:"Debug theo bằng chứng và git", exit:"3 ghi chú debug đã commit; mỗi ghi chú có giả thuyết viết trước.", real:"Quét bí mật trong lịch sử git của bamso."},
+ {id:"P2", name:"App vận hành thế nào", exit:"docs/dang-nhap.md có sơ đồ luồng đăng nhập và 1 truy vấn nối bảng chạy thật.", real:"Vẽ luồng kiosk, lấy số, màn hình gọi số của bamso."},
+ {id:"P3", name:"Test và kiểm chứng", exit:"Commit thêm test, CI xanh, test bắt được lỗi thật.", real:"Đọc một file test của bamso và thêm một test."},
+ {id:"P4", name:"Sản phẩm thật và thiết kế", exit:"specs/<tên>.md dài một trang, viết trước khi vibe code tính năng.", real:"Viết spec 1 trang cho một tính năng của bamso."},
+ {id:"P5", name:"Review code AI chuẩn dev", exit:"reviews/PR-<số>.md có ít nhất 3 vấn đề, đối chiếu với CI.", real:"Làm cổng duyệt cuối cho một PR của bamso."}
+];
+const ROWS = [["P0"],["P1"],["P2","P3"],["P4"],["P5"],["GOAL"]];
+const W = {D:1, M:.5, S:0};
+const byId = Object.fromEntries(P.map(p => [p.id, p]));
+const $ = id => document.getElementById(id);
+function el(t, c, x) { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+let md = DEF, saved = "", sel = "P0";
+try { const s = localStorage.getItem(KEY); if (s) { const o = JSON.parse(s); if (o && o.md) { md = o.md; saved = o.at || ""; } } } catch (e) {}
+
+function parse(t) {
+  const rows = [];
+  t.split("\n").forEach(l => {
+    l = l.trim();
+    if (l[0] !== "|") return;
+    const c = l.replace(/^\||\|$/g, "").split("|").map(s => s.trim());
+    if (!/^\d+$/.test(c[0])) return;
+    const r = (c[3] || "").toUpperCase().replace("Đ", "D");
+    if (r.length !== 1 || "DMS".indexOf(r) < 0) return;
+    const codes = (c[4] || "").toUpperCase().match(/L[1-8]/g) || [];
+    const map = {L1:"range",L2:"chiso",L3:"phep",L4:"inra",L5:"while",L6:"bang",L7:"bang",L8:"trace"};
+    const inferred = [...new Set(codes.map(code => map[code]).filter(Boolean))];
+    const supplied = (c[5] || "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+    rows.push({n: +c[0], date: c[1] || "", name: c[2] || "", r: r, sk: supplied.length ? supplied : inferred});
+  });
+  return rows;
+}
+const avg = a => a.reduce((x, r) => x + W[r.r], 0) / a.length;
+
+function render() {
+  const rows = parse(md), n = rows.length;
+  let best = 0, run = 0;
+  rows.forEach(r => { run = r.r === "D" ? run + 1 : 0; best = Math.max(best, run); });
+  const st = SK.map(s => {
+    const a = rows.filter(r => r.sk.indexOf(s.id) >= 0), rec = a.slice(-4);
+    return Object.assign({}, s, {n: a.length, rr: rec.length ? avg(rec) : null});
+  });
+  const cand = st.filter(s => s.n >= 2).sort((a, b) => a.rr - b.rr || b.n - a.n)[0];
+
+  const nx = $("next"); nx.textContent = "";
+  nx.append(el("div", "eyebrow", "BƯỚC TIẾP THEO"));
+  if (!n) {
+    nx.append(el("p", "big", "Dán nội dung SCORE.md ở cuối trang để bắt đầu."));
+  } else {
+    nx.append(el("p", "big", cand ? "Luyện: " + cand.name : "Chưa đủ dữ liệu theo kỹ năng"));
+    if (cand) {
+      nx.append(el("p", "muted", cand.tip));
+      nx.append(el("p", "say", "Nói với Claude: “Ra 3 bài về " + cand.name + ", bảng theo từng dòng.”"));
+    }
+    nx.append(el("p", "muted", "Chuỗi đúng liên tiếp: " + run + " / 10 (tốt nhất " + best + ")."));
+  }
+
+  const rd = $("road"); rd.textContent = "";
+  ROWS.forEach((r, i) => {
+    if (i) rd.append(el("div", "arrow", "↓"));
+    const row = el("div", "row");
+    r.forEach(id => {
+      const g = id === "GOAL", p = g ? {id: "ĐÍCH", name: "Đủ sức làm cổng duyệt cuối cho một PR của bamso"} : byId[id];
+      const b = el("button", "node" + (g ? " goal" : "") + (id === sel ? " on" : ""));
+      b.setAttribute("aria-pressed", id === sel);
+      b.append(el("b", null, p.id), el("span", "nm", p.name));
+      if (!g) {
+        const doing = curPhase() === id, dn = evDone(id);
+        b.append(el("span", "badge " + (doing ? "b-doing" : "b-todo"), dn ? "Xong" : doing ? "Đang làm" : "Chưa"));
+        if (doing && id === "P0") { const bar = el("div", "bar"), f = el("i"); f.style.width = Math.min(100, run * 10) + "%"; bar.append(f); b.append(bar); }
+      }
+      b.onclick = () => { sel = id; render(); };
+      row.append(b);
+    });
+    rd.append(row);
+  });
+  const d = $("detail"); d.textContent = "";
+  if (sel === "GOAL") {
+    d.append(el("h3", null, "Đích"), el("p", null, "Bạn tự đọc được diff, hiểu kết quả CI và quyết định merge dựa trên bằng chứng, không chỉ dựa vào lời AI báo cáo."));
+  } else {
+    const p = byId[sel];
+    d.append(el("h3", null, p.id + ". " + p.name), el("p", null, "Qua giai đoạn khi: " + p.exit), el("p", "muted", "Việc thật trên bamso: " + p.real));
+    d.append(el("p", "muted", "Bằng chứng trong repo: " + (typeof EVID === "object" && EVID ? EVID[p.id] : "")));
+    const tg = el("button", "act" + (evDone(p.id) ? "" : " pri"), evDone(p.id) ? "Bỏ xác nhận" : "Tôi xác nhận đã qua phase này");
+    tg.onclick = () => { EVS[p.id] = !EVS[p.id]; saveEv(); render(); };
+    d.append(tg, el("p", "muted", "Chỉ bấm khi bằng chứng đã nằm trong repo."));
+  }
+
+  const sm = $("skills"); sm.textContent = "";
+  st.forEach(s => {
+    const lv = s.n === 0 ? "none" : s.rr >= .8 ? "ok" : s.rr >= .5 ? "mid" : "bad";
+    const t = el("div", "sk " + lv);
+    t.append(el("b", null, s.name), el("span", "lab", {none: "Chưa gặp", ok: "Vững", mid: "Đang lên", bad: "Yếu"}[lv]),
+      el("span", "muted", s.n ? "4 lần gần nhất: " + Math.round(s.rr * 100) + "% · " + s.n + " câu" : "0 câu"));
+    sm.append(t);
+  });
+  $("skillnote").textContent = rows.some(r => !r.sk.length) ? "Một số câu (thường là câu đúng trong SCORE.md cũ) chưa có dữ liệu kỹ năng nên chưa được tính vào bản đồ." : "";
+
+  const win = 5, pts = [];
+  for (let i = win - 1; i < n; i++) pts.push(avg(rows.slice(i - win + 1, i + 1)));
+  const X = i => 10 + (pts.length > 1 ? i * 280 / (pts.length - 1) : 140), Y = v => 80 - v * 70;
+  $("chart").innerHTML = pts.length
+    ? '<svg viewBox="0 0 300 96" role="img" aria-label="Tỉ lệ đúng trượt trên 5 câu gần nhất"><line class="tgt" x1="10" x2="290" y1="' + Y(.8) + '" y2="' + Y(.8) + '"/>'
+      + '<polyline class="ln" points="' + pts.map((v, i) => X(i) + "," + Y(v)).join(" ") + '"/>'
+      + pts.map((v, i) => '<circle class="pt" r="3" cx="' + X(i) + '" cy="' + Y(v) + '"/>').join("")
+      + '<text class="tx" x="290" y="' + (Y(.8) - 4) + '" text-anchor="end">mục tiêu 80%</text>'
+      + '<text class="tx" x="10" y="94">câu ' + win + '</text><text class="tx" x="290" y="94" text-anchor="end">câu ' + n + '</text></svg>'
+    : '<p class="muted">Cần ít nhất 5 câu để vẽ xu hướng.</p>';
+  const dots = $("dots"); dots.textContent = "";
+  rows.forEach(r => { const e = el("span", "dot " + r.r, r.r === "D" ? "Đ" : r.r); e.title = "Câu " + r.n + ": " + r.name; dots.append(e); });
+  $("src").textContent = "Nguồn: " + (saved ? "dán lúc " + saved : "dữ liệu mẫu ngày 03/11") + " · " + n + " câu.";
+}
+$("apply").onclick = () => {
+  const t = $("paste").value, k = parse(t).length;
+  if (!k) { $("msg").textContent = "Không đọc được dòng nào. Cần bảng có cột #, Ngày, Bài, KQ, Lỗi, Kỹ năng."; return; }
+  md = t; saved = new Date().toLocaleString("vi-VN");
+  try { localStorage.setItem(KEY, JSON.stringify({md: t, at: saved})); } catch (e) {}
+  $("msg").textContent = "Đã cập nhật " + k + " câu."; render();
+};
+$("reset").onclick = () => {
+  md = DEF; saved = "";
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  $("msg").textContent = "Đã quay về dữ liệu mẫu."; render();
+};
+render();
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[rnd(0,a.length-1)];
+const NL=String.fromCharCode(10);
+const dateKey=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+function tbl(h,rs){const t=el('table'),r0=el('tr');h.forEach(x=>r0.append(el('th',null,x)));t.append(r0);rs.forEach(r=>{const tr=el('tr');r.forEach(x=>tr.append(el('td',null,String(x))));t.append(tr);});return t;}
+const GENS=[
+{s:['range','inra','bang'],f:()=>{
+ const a=rnd(0,3),b=a+rnd(2,5),k=rnd(1,3),c=rnd(0,5),o=[],t=[];
+ for(let i=a;i<b;i++){o.push(i*k+c);t.push([i,i*k+c]);}
+ return{name:'range('+a+', '+b+') in i * '+k+' + '+c,code:'for i in range('+a+', '+b+'):'+NL+'    print(i * '+k+' + '+c+')',out:o,sk:['range','inra','bang'],th:['i','In ra'],tr:t,why:'Số vòng = '+b+' − '+a+' = '+(b-a)+'. i chạy từ '+a+' tới '+(b-1)+'.'};
+}},
+{s:['range','bang'],f:()=>{
+ const a=rnd(0,3),b=a+rnd(2,5),t=[];let s=0;
+ for(let i=a;i<b;i++){s+=i;t.push([i,s]);}
+ return{name:'tổng range('+a+', '+b+')',code:'total = 0'+NL+'for i in range('+a+', '+b+'):'+NL+'    total = total + i'+NL+'print(total)',out:[s],sk:['range','bang'],th:['i','total sau vòng'],tr:t,why:'range('+a+', '+b+') có '+(b-a)+' vòng, dừng trước '+b+'.'};
+}},
+{s:['while','inra','bang'],f:()=>{
+ const mul=Math.random()<.5,s=rnd(1,4),d=mul?rnd(2,3):rnd(2,5),L=mul?rnd(12,40):rnd(10,22),pf=Math.random()<.5,op=mul?'*':'+';
+ let n=s;const o=[],t=[];
+ while(n<L){const b=n;n=mul?n*d:n+d;o.push(pf?b:n);t.push([b,'đúng',n,pf?b:n]);}
+ t.push([n,'sai, dừng','','']);
+ return{name:'while n < '+L+', n = n '+op+' '+d+(pf?' (in trước)':''),code:'n = '+s+NL+'while n < '+L+':'+NL+(pf?'    print(n)'+NL+'    n = n '+op+' '+d:'    n = n '+op+' '+d+NL+'    print(n)'),out:o,sk:['while','inra','bang'],th:['n đầu vòng','n < '+L+'?','n sau','In ra'],tr:t,why:'Điều kiện kiểm tra n ở đầu vòng, trước khi n đổi.'};
+}},
+{s:['range','chiso','inra','trace'],f:()=>{
+ const ds=Array.from({length:rnd(4,5)},()=>rnd(2,9)*3+rnd(0,2)),a=rnd(0,2),over=Math.random()<.4,end=ds.length+(over?1:0),o=[],t=[];
+ for(let i=a;i<end;i++){if(i<ds.length){o.push(ds[i]);t.push([i,'ds['+i+']',ds[i]]);}else{o.push('IndexError');t.push([i,'ds['+i+']','IndexError: ngoài khoảng']);break;}}
+ return{name:'ds '+ds.length+' phần tử, range('+a+', len(ds)'+(over?' + 1':'')+')',code:'ds = ['+ds.join(', ')+']'+NL+'for i in range('+a+', len(ds)'+(over?' + 1':'')+'):'+NL+'    print(ds[i])',out:o,sk:over?['chiso','trace','range']:['range','chiso','inra'],th:['i','Phần tử','In ra'],tr:t,why:'len(ds) = '+ds.length+', chỉ số hợp lệ 0 đến '+(ds.length-1)+(over?'. range dừng trước '+end+' nên i = '+ds.length+' là ngoài khoảng.':'.')};
+}},
+{s:['phep'],f:()=>{
+ const b=pick([2,4,5,8]),a=rnd(7,39),q=Math.floor(a/b),r=a%b,f=a/b,fs=Number.isInteger(f)?f.toFixed(1):String(f),e='print('+a+' // '+b+', '+a+' / '+b+', '+a+' % '+b+')';
+ return{name:e,code:e,out:[q+' '+fs+' '+r],sk:['phep'],th:['Phép','Kết quả'],tr:[[a+' // '+b,q],[a+' / '+b,fs],[a+' % '+b,r]],why:a+' = '+b+' × '+q+' + '+r+'. // lấy thương nguyên, % lấy phần dư, / chia thường.'};
+}},
+{s:['bang'],f:()=>{
+ const x=rnd(1,6),y=rnd(1,5),z=rnd(2,4),v=x+y,w=v*z;
+ return{name:'a = '+x+', cộng '+y+', nhân '+z,code:'a = '+x+NL+'a = a + '+y+NL+'a = a * '+z+NL+'print(a)',out:[w],sk:['bang'],th:['Dòng vừa chạy','a sau dòng đó','In ra'],tr:[['a = '+x,x,''],['a = a + '+y,v,''],['a = a * '+z,w,''],['print(a)',w,w]],why:'Đi từng dòng, mỗi dòng đổi a một lần.'};
+}}
+];
+function persist(){saved=new Date().toLocaleString('vi-VN');try{localStorage.setItem(KEY,JSON.stringify({md:md,at:saved}));}catch(e){}}
+function record(name,r,sk){
+ const rows=parse(md),n=rows.length?rows[rows.length-1].n+1:1;
+ md=md.replace(/\s+$/,'')+NL+'| '+n+' | '+dateKey(new Date())+' | '+name.replace(/\|/g,'/')+' | '+(r==='D'?'Đ':r)+' | | '+sk.join(',')+' |';
+ persist();render();
+}
+function undo(){
+ const L=md.replace(/\s+$/,'').split(NL);
+ for(let i=L.length-1;i>=0;i--){const t=L[i].trim();if(t[0]==='|'&&/^\s*\d+\s*$/.test(t.replace(/^\||\|$/g,'').split('|')[0])){L.splice(i,1);break;}}
+ md=L.join(NL);persist();render();
+}
+function weakest(){
+ const rows=parse(md);
+ return SK.map(s=>{const a=rows.filter(r=>r.sk.indexOf(s.id)>=0).slice(-4);return Object.assign({},s,{n:a.length,rr:a.length?avg(a):9});}).filter(s=>s.n>=2).sort((a,b)=>a.rr-b.rr)[0];
+}
+let Q=null,answered=false;
+function newQ(){
+ const w=weakest(),c=GENS.filter(g=>w&&g.s.indexOf(w.id)>=0);
+ Q=(Math.random()<.7&&c.length?pick(c):pick(GENS)).f();answered=false;
+ const p=$('prac');p.textContent='';
+ p.append(el('div','muted',w?'Đang ưu tiên kỹ năng yếu: '+w.name:'Bài ngẫu nhiên'));
+ p.append(el('pre','code',Q.code));
+ p.append(el('div','muted','Dự đoán những gì được in ra, theo thứ tự (cách nhau bằng dấu cách hoặc xuống dòng). Nếu code gây lỗi, ghi tên lỗi ở cuối. Chưa xem đáp án.'));
+ const ta=el('textarea');ta.setAttribute('aria-label','Dự đoán của bạn');ta.style.minHeight='70px';p.append(ta);
+ const ok=el('button','act pri','Kiểm tra'),sk=el('button','act','Bỏ qua, bài khác'),out=el('div');
+ ok.onclick=()=>{if(answered||!ta.value.trim())return;answered=true;check(ta.value,out);};
+ sk.onclick=newQ;
+ p.append(ok,sk,out);
+}
+function check(v,out){
+ const norm=s=>s.replace(/,/g,' ').trim().split(/\s+/).map(x=>x.toLowerCase());
+ const want=norm(Q.out.join(' ')),got=norm(v),good=got.length===want.length&&got.every((x,i)=>x===want[i]);
+ out.textContent='';
+ out.append(el('p','big',good?'Đúng.':'Chưa đúng.'),el('p',null,'Đáp án: '+Q.out.join(' | ')),tbl(Q.th,Q.tr),el('p','muted',Q.why));
+ const nx=el('button','act pri','Bài tiếp theo');nx.onclick=newQ;out.append(nx);
+ record(Q.name,good?'D':'S',Q.sk);
+}
+function initManual(){
+ const m=$('manual'),nm=el('input'),sel=el('select'),chips=el('div','chips'),on={};
+ nm.placeholder='Tên bài (ví dụ: while n * 2 < 30)';nm.setAttribute('aria-label','Tên bài');
+ [['D','Đúng'],['M','Một phần'],['S','Sai']].forEach(o=>{const e=el('option',null,o[1]);e.value=o[0];sel.append(e);});
+ SK.forEach(s=>{const b=el('button','chip',s.name);b.setAttribute('aria-pressed','false');b.onclick=()=>{on[s.id]=!on[s.id];b.setAttribute('aria-pressed',String(!!on[s.id]));};chips.append(b);});
+ const add=el('button','act pri','Ghi câu này'),und=el('button','act','Xóa câu cuối'),exp=el('button','act','Xuất SCORE.md'),msg=el('p','muted'),box=el('textarea');
+ box.readOnly=true;box.style.display='none';box.setAttribute('aria-label','Nội dung SCORE.md');
+ add.onclick=()=>{const sk=SK.filter(s=>on[s.id]).map(s=>s.id);if(!nm.value.trim()||!sk.length){msg.textContent='Cần tên bài và ít nhất một kỹ năng.';return;}record(nm.value.trim(),sel.value,sk);nm.value='';msg.textContent='Đã ghi.';};
+ und.onclick=()=>{undo();msg.textContent='Đã xóa câu cuối.';};
+ exp.onclick=()=>{box.value=md;box.style.display='block';box.select();msg.textContent='Chọn hết và sao chép, dán vào exercises/SCORE.md (thay bảng cũ).';try{navigator.clipboard.writeText(md).then(()=>{msg.textContent='Đã sao chép. Dán vào exercises/SCORE.md (thay bảng cũ).';},()=>{});}catch(e){}};
+ m.append(nm,sel,el('div','muted','Kỹ năng liên quan:'),chips,add,und,exp,msg,box);
+}
+initManual();newQ();
+var EVS={};
+try{EVS=JSON.parse(localStorage.getItem('lb:ev')||'{}')||{};}catch(e){EVS={};}
+var EVID={P0:'SCORE.md có chuỗi 10 đúng liên tiếp và 3 traceback mới đọc đúng.',P1:'3 ghi chú debug đã commit (mẫu templates/debug-note.md), mỗi cái có giả thuyết viết trước.',P2:'docs/dang-nhap.md (sơ đồ luồng đăng nhập) và 1 truy vấn nối bảng chạy thật.',P3:'Commit thêm test, CI xanh, và test bắt được lỗi thật.',P4:'specs/<tên>.md một trang, viết trước khi vibe code tính năng.',P5:'reviews/PR-<số>.md với ít nhất 3 vấn đề, đối chiếu với CI.'};
+function saveEv(){try{localStorage.setItem('lb:ev',JSON.stringify(EVS));}catch(e){}}
+function evDone(id){return !!(EVS&&EVS[id]);}
+function curPhase(){for(let i=0;i<P.length;i++)if(!evDone(P[i].id))return P[i].id;return null;}
+const SHORT={range:'range',chiso:'chỉ số',phep:'% // /',inra:'đọc in ra',while:'while',bang:'bảng',trace:'traceback'};
+function extra(){
+ const rows=parse(md),today=new Date(),cnt={};
+ rows.forEach(r=>{if(r.date)cnt[r.date]=(cnt[r.date]||0)+1;});
+ const rh=$('rhythm');rh.textContent='';
+ let wk=0;const grid=el('div','cal');
+ for(let i=13;i>=0;i--){const d=new Date(today.getTime()-i*864e5),k=dateKey(d),c=cnt[k]||0;if(i<7&&c)wk++;const cell=el('span','cd'+(c>=4?' h2':c?' h1':''),String(d.getDate()));cell.title=k+': '+c+' câu';grid.append(cell);}
+ rh.append(el('p','big',wk+' / 3 buổi trong 7 ngày qua'),el('div','muted','Mục tiêu: ít nhất 3 buổi mỗi tuần, mỗi buổi 10 phút. Ô đậm là ngày có từ 4 câu, ô nhạt là 1 đến 3 câu.'),grid);
+ const sv=SK.map(s=>{const a=rows.filter(r=>r.sk.indexOf(s.id)>=0).slice(-4);return a.length?avg(a):0;});
+ const cx=160,cy=130,R=90,N=SK.length,pt=(i,v)=>{const a=-Math.PI/2+i*2*Math.PI/N;return[cx+Math.cos(a)*R*v,cy+Math.sin(a)*R*v];};
+ let g='';
+ [.5,.8,1].forEach(v=>{g+='<polygon class="rg" points="'+SK.map((s,i)=>pt(i,v).join(',')).join(' ')+'"/>';});
+ SK.forEach((s,i)=>{const p=pt(i,1.2),a=p[0]<cx-5?'end':p[0]>cx+5?'start':'middle',e=pt(i,1);g+='<line class="rg" x1="'+cx+'" y1="'+cy+'" x2="'+e[0]+'" y2="'+e[1]+'"/><text class="tx" x="'+p[0]+'" y="'+p[1]+'" text-anchor="'+a+'">'+SHORT[s.id]+'</text>';});
+ g+='<polygon class="rp" points="'+sv.map((v,i)=>pt(i,v).join(',')).join(' ')+'"/>';
+ $('radar').innerHTML='<svg viewBox="0 0 320 260" role="img" aria-label="Bản đồ nhện kỹ năng">'+g+'</svg><div class="muted">Viền ngoài là 100%, vòng giữa là 80% (mục tiêu). Số liệu: 4 lần gần nhất mỗi kỹ năng.</div>';
+ const dn=P.filter(p=>evDone(p.id)).length,bs=$('boss');bs.textContent='';
+ bs.append(el('div','eyebrow','TRÙM CUỐI'),el('p','big','Duyệt một PR của bamso'),el('div','muted',dn+' / '+P.length+' phase đã có bằng chứng'));
+ const bar=el('div','bar'),f=el('i');f.style.width=Math.round(dn*100/P.length)+'%';bar.append(f);bs.append(bar);
+}
+const _base=render;
+render=function(){_base();extra();};
+render();
+</script>
+</body>
+</html>

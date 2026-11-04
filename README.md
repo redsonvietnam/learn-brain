@@ -16,4 +16,7 @@ Bộ não học lập trình thời AI của riêng tôi (repo private).
 | LOG.md | Nhật ký phiên và sổ lỗi |
 | PROJECTS.md | Mô tả app thật của tôi |
 | exercises/ | Bài tập theo phase và bảng điểm (SCORE.md) |
+| dashboard.html | Giao diện luyện tập tĩnh, đọc/xuất SCORE.md |
 | templates/ | Mẫu ghi chú |
+
+**Mở dashboard:** mở `dashboard.html` bằng trình duyệt. Trong mục **Cập nhật dữ liệu**, dán nội dung `exercises/SCORE.md` rồi chọn **Cập nhật**. Dữ liệu nhập và trạng thái phase được lưu trên trình duyệt hiện tại; `SCORE.md` trong repo vẫn là nguồn bằng chứng chính thức.
