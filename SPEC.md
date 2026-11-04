@@ -48,3 +48,23 @@ Tới P4 thì AI tạo templates/design-1page.md; tới P5 thì templates/review
 - PROJECTS.md: mô tả app thật; nguồn bài tập từ P1.
 - exercises/SCORE.md: bảng điểm và thống kê loại lỗi.
 - Đóng băng khung: không thêm cấu trúc mới (ngoài bài tập) cho tới khi qua P0.
+
+## 11. Bốn vòng lặp
+- Ngày (10 phút): làm bài trên dashboard, dự đoán trước rồi mới xem đáp án, ghi điểm.
+- Tuần (30 phút): xuất SCORE.md và commit; xem lại kỹ năng yếu nhất; viết 1 ghi chú debug.
+- Phase: nộp bằng chứng (mục 12), người học tự xác nhận.
+- Dự án: dùng bamso làm đề thật theo từng phase (xem PROJECTS.md).
+
+## 12. Cổng bằng chứng
+AI không tự xác nhận qua phase. Chỉ người học xác nhận, và chỉ khi bằng chứng đã nằm trong repo.
+- P0: SCORE.md có chuỗi 10 đúng liên tiếp và 3 traceback mới đọc đúng.
+- P1: 3 ghi chú debug đã commit (mẫu templates/debug-note.md), mỗi cái có giả thuyết viết trước.
+- P2: docs/dang-nhap.md (sơ đồ luồng đăng nhập) và 1 truy vấn nối bảng chạy thật.
+- P3: commit thêm test, CI xanh, test bắt được lỗi thật.
+- P4: specs/<tên>.md một trang, viết trước khi vibe code tính năng.
+- P5: reviews/PR-<số>.md với ít nhất 3 vấn đề, đối chiếu với CI.
+
+## 13. Nhịp và quy tắc chặn
+- Ít nhất 3 buổi 10 phút mỗi tuần.
+- Thiếu buổi thì dừng thêm cấu trúc hoặc tính năng mới cho brain.
+- Thư mục debug-notes/, docs/, specs/, reviews/ chỉ tạo khi tới phase tương ứng.
